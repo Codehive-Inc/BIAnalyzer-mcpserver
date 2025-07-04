@@ -1,4 +1,4 @@
-Classifier MCP Server
+**Classifier MCP Server**
 
 Steps to run:
 1. Spin up neo4j and postgres docker containers:  
