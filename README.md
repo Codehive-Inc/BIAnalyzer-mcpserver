@@ -1,7 +1,7 @@
 Classifier MCP Server
 
 Steps to run:
-1. Spin up neo4j and postgres docker containers:
+1. Spin up neo4j and postgres docker containers:\n
       docker run -d --name pgdb -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=mcp_db -p 5432:5432 postgres:15
       docker run -d --name neo4jdb -e NEO4J_AUTH=neo4j/test12345 -p 7474:7474 -p 7687:7687 neo4j:5
 
