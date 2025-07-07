@@ -1,12 +1,19 @@
 from neo4j import GraphDatabase
+import os
+from dotenv import load_dotenv
 from db_interface import DatabaseProtocol
+
+load_dotenv()
 
 class Neo4jDB(DatabaseProtocol):
     def __init__(self):
         self.driver = None
 
     def connect(self):
-        self.driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "test12345"))
+        uri = os.getenv("NEO4J_URI", "bolt://localhost:7688")
+        user = os.getenv("NEO4J_USER", "neo4j")
+        password = os.getenv("NEO4J_PASSWORD", "test12345")
+        self.driver = GraphDatabase.driver(uri, auth=(user, password))
 
     def insert(self, data):
         with self.driver.session() as session:

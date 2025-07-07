@@ -14,6 +14,11 @@ pg = PostgresDB(); pg.connect()
 neo4j = Neo4jDB(); neo4j.connect()
 context = DBContext(pg)
 
+@app.get("/health")
+def health_check():
+    """Health check endpoint for Docker"""
+    return {"status": "healthy", "service": "mcp_server"}
+
 @app.post("/process")
 def process_input(data: PromptRequest):
     try:
