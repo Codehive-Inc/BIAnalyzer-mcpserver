@@ -1,7 +1,7 @@
 from neo4j import GraphDatabase
 import os
 from dotenv import load_dotenv
-from db_interface import DatabaseProtocol
+from .db_interface import DatabaseProtocol
 
 load_dotenv()
 

@@ -7,6 +7,8 @@ Implements the Model Context Protocol to classify prompts and route to appropria
 import asyncio
 import json
 import os
+import sys
+import logging
 from typing import Any, Dict, List, Optional
 from dotenv import load_dotenv
 
@@ -20,8 +22,31 @@ from mcp.types import (
     TextContent,
 )
 
+# Set up logging
+log_dir = os.path.expanduser("~/mcp_server_logs")
+os.makedirs(log_dir, exist_ok=True)
+log_file = os.path.join(log_dir, "mcp_server.log")
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(log_file),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger("mcp_server")
+logger.info("MCP server starting up")
+
+# Log system information
+logger.info(f"Python version: {sys.version}")
+logger.info(f"Current directory: {os.getcwd()}")
+logger.info(f"Script path: {os.path.abspath(__file__)}")
+
 # Load environment variables
 load_dotenv()
+logger.info("Environment variables loaded")
 
 # Initialize MCP server
 server = Server("database-classifier")
@@ -248,22 +273,30 @@ async def handle_query_neo4j(arguments: Dict[str, Any]) -> CallToolResult:
 
 async def main():
     """Main function to run the MCP server"""
-    # Run the server
-    async with stdio_server() as (read_stream, write_stream):
-        from mcp.server.lowlevel.server import NotificationOptions
-        
-        await server.run(
-            read_stream,
-            write_stream,
-            InitializationOptions(
-                server_name="database-classifier",
-                server_version="1.0.0",
-                capabilities=server.get_capabilities(
-                    notification_options=NotificationOptions(tools_changed=True),
-                    experimental_capabilities={}
+    logger.info("Entering main function")
+    try:
+        # Run the server
+        logger.info("Setting up stdio server")
+        async with stdio_server() as (read_stream, write_stream):
+            from mcp.server.lowlevel.server import NotificationOptions
+            
+            logger.info("Starting MCP server run")
+            await server.run(
+                read_stream,
+                write_stream,
+                InitializationOptions(
+                    server_name="database-classifier",
+                    server_version="1.0.0",
+                    capabilities=server.get_capabilities(
+                        notification_options=NotificationOptions(tools_changed=True),
+                        experimental_capabilities={}
+                    ),
                 ),
-            ),
-        )
+            )
+            logger.info("MCP server run completed")
+    except Exception as e:
+        logger.error(f"Error in main function: {e}", exc_info=True)
+        raise
 
 if __name__ == "__main__":
     asyncio.run(main()) 

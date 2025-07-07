@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from postgres_db import PostgresDB
-from neo4j_db import Neo4jDB
-from azure_openai import choose_db_from_prompt
-from db_interface import DBContext
+from .postgres_db import PostgresDB
+from .neo4j_db import Neo4jDB
+from .azure_openai import choose_db_from_prompt
+from .db_interface import DBContext
 
 class PromptRequest(BaseModel):
     prompt: str

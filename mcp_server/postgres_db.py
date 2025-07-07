@@ -1,7 +1,7 @@
 import psycopg2
 import os
 from dotenv import load_dotenv
-from db_interface import DatabaseProtocol
+from .db_interface import DatabaseProtocol
 
 load_dotenv()
 
