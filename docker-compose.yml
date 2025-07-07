@@ -63,7 +63,7 @@ services:
       - NEO4J_PASSWORD=test12345
       - AZURE_API_KEY=${AZURE_API_KEY}
       - AZURE_API_BASE=${AZURE_API_BASE}
-      - AZURE_ENGINE=${AZURE_ENGINE}
+      - AZURE_DEPLOYMENT=${AZURE_DEPLOYMENT}
     depends_on:
       postgres:
         condition: service_healthy

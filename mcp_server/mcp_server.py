@@ -140,7 +140,7 @@ async def handle_classify_and_store(arguments: Dict[str, Any]) -> CallToolResult
         )
         
         response = client.chat.completions.create(
-            model=os.getenv("AZURE_ENGINE"),
+            model=os.getenv("AZURE_DEPLOYMENT"),
             messages=[
                 {"role": "system", "content": "You are a classifier. Respond only with 'postgres' or 'neo4j'."},
                 {"role": "user", "content": prompt}
@@ -250,13 +250,18 @@ async def main():
     """Main function to run the MCP server"""
     # Run the server
     async with stdio_server() as (read_stream, write_stream):
+        from mcp.server.lowlevel.server import NotificationOptions
+        
         await server.run(
             read_stream,
             write_stream,
             InitializationOptions(
                 server_name="database-classifier",
                 server_version="1.0.0",
-                capabilities=server.get_capabilities(),
+                capabilities=server.get_capabilities(
+                    notification_options=NotificationOptions(tools_changed=True),
+                    experimental_capabilities={}
+                ),
             ),
         )
 

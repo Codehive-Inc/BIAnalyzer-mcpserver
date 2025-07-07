@@ -81,7 +81,7 @@ Copy `env.sample` to `.env` and configure the following variables:
 ### Required:
 - `AZURE_API_KEY`: Your Azure OpenAI API key
 - `AZURE_API_BASE`: Your Azure OpenAI endpoint URL
-- `AZURE_ENGINE`: Your Azure OpenAI deployment name
+- `AZURE_DEPLOYMENT`: Your Azure OpenAI deployment name
 
 ### Optional (defaults provided):
 - `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`

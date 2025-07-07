@@ -18,7 +18,7 @@
 ```
 AZURE_API_KEY=your_azure_openai_api_key_here
 AZURE_API_BASE=https://your-resource-name.openai.azure.com/
-AZURE_ENGINE=your-deployment-name
+AZURE_DEPLOYMENT=your-deployment-name
 ```
 
 ### Database Configuration
