@@ -1,16 +1,20 @@
 from mcp.server.fastmcp import FastMCP
 import psycopg2
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 mcp=FastMCP('postgres-mcp-server')
 
 # Connection details
 def connect_to_db():
     conn = psycopg2.connect(
-        dbname="test_db",
-        user="postgres",
-        password="secret123",
-        host="localhost",
-        port="5432"
+        dbname=os.getenv("POSTGRES_DB", "mcp_db"),
+        user=os.getenv("POSTGRES_USER", "mcp_user"),
+        password=os.getenv("POSTGRES_PASSWORD", "secret"),
+        host=os.getenv("POSTGRES_HOST", "localhost"),
+        port=os.getenv("POSTGRES_PORT", "5432")
     )
     return conn
 

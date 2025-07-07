@@ -1,13 +1,17 @@
 from neo4j import GraphDatabase
 from mcp.server.fastmcp import FastMCP
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 mcp=FastMCP('neo4j-mcp-server')
 
 # Credentials and bolt URL
 def connect_to_db():
-    URI = "bolt://localhost:7687"
-    USERNAME = "neo4j"
-    PASSWORD = "test12345"
+    URI = os.getenv("NEO4J_URI", "bolt://localhost:7688")
+    USERNAME = os.getenv("NEO4J_USER", "neo4j")
+    PASSWORD = os.getenv("NEO4J_PASSWORD", "test12345")
 
     # Create driver
     driver = GraphDatabase.driver(URI, auth=(USERNAME, PASSWORD))
