@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 from .postgres_db import PostgresDB
 from .neo4j_db import Neo4jDB
 from .azure_openai import choose_db_from_prompt
@@ -31,6 +31,25 @@ context = DBContext(pg)
 def health_check():
     """Health check endpoint for Docker"""
     return {"status": "healthy", "service": "mcp_server"}
+
+@app.get("/resources")
+def list_resources():
+    """List all resources from both databases"""
+    try:
+        # Get resources from PostgreSQL
+        context.switch(pg)
+        pg_resources = context.read("SELECT * FROM prompts LIMIT 100")
+        
+        # Get resources from Neo4j
+        context.switch(neo4j)
+        neo4j_resources = context.read("MATCH (n:Prompt) RETURN n LIMIT 100")
+        
+        return {
+            "postgres_resources": pg_resources,
+            "neo4j_resources": neo4j_resources
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.get("/tools")
 def list_tools():
