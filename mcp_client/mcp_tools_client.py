@@ -22,6 +22,16 @@ def list_tools():
         print(f"❌ Error listing tools: {e}")
         return {"tools": []}
 
+def list_resources():
+    """List all resources from both PostgreSQL and Neo4j databases"""
+    try:
+        response = requests.get(f"{SERVER_URL}/resources")
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Error listing resources: {e}")
+        return {"error": str(e)}
+
 def call_tool(tool_name: str, arguments: Dict[str, Any]):
     """Call a specific tool on the MCP server"""
     try:
@@ -66,9 +76,10 @@ def run():
         print("\n📝 Choose an option:")
         print("  1. List tools")
         print("  2. Call a tool")
-        print("  3. Exit")
+        print("  3. List resources")
+        print("  4. Exit")
         
-        choice = input("Enter choice (1-3): ").strip()
+        choice = input("Enter choice (1-4): ").strip()
         
         if choice == "1":
             # List tools again
@@ -122,12 +133,39 @@ def run():
                 print("❌ Please enter a valid number")
                 
         elif choice == "3":
+            # List resources
+            print("\n📋 Fetching resources from databases...")
+            resources = list_resources()
+            
+            if "error" in resources:
+                print(f"❌ Error: {resources['error']}")
+                continue
+                
+            # Display PostgreSQL resources
+            print("\n📊 PostgreSQL Resources:")
+            pg_resources = resources.get("postgres_resources", [])
+            if not pg_resources:
+                print("  No resources found")
+            else:
+                for i, resource in enumerate(pg_resources):
+                    print(f"  {i+1}. {resource}")
+            
+            # Display Neo4j resources
+            print("\n🔄 Neo4j Resources:")
+            neo4j_resources = resources.get("neo4j_resources", [])
+            if not neo4j_resources:
+                print("  No resources found")
+            else:
+                for i, resource in enumerate(neo4j_resources):
+                    print(f"  {i+1}. {resource}")
+                    
+        elif choice == "4":
             # Exit
             print("👋 Goodbye!")
             break
             
         else:
-            print("❌ Invalid choice. Please enter 1, 2, or 3.")
+            print("❌ Invalid choice. Please enter 1, 2, 3, or 4.")
 
 if __name__ == "__main__":
     run()
